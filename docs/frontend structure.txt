@@ -1,0 +1,48 @@
+PharmacyAPI/                          # BACKEND (.NET)
+├── Controllers/
+│   ├── AuthController.cs            # Member 1
+│   ├── MedicinesController.cs       # Member 1
+│   ├── CategoriesController.cs      # Member 1
+│   ├── OrderController.cs           # Member 2
+│   └── PrescriptionController.cs    # Member 2
+├── Services/
+│   ├── AuthService.cs               # Member 1
+│   ├── MedicineService.cs           # Member 1
+│   ├── OrderService.cs              # Member 2
+│   └── PrescriptionService.cs       # Member 2
+├── Models/                          # Shared
+│   ├── User.cs
+│   ├── Medicine.cs
+│   ├── Category.cs
+│   ├── Order.cs
+│   ├── OrderItem.cs
+│   └── Prescription.cs
+└── DTOs/                            # Shared
+    ├── AuthDTOs.cs
+    ├── MedicineDTOs.cs
+    ├── OrderDTOs.cs
+    └── PrescriptionDTOs.cs
+
+pharmacy-frontend/                   # FRONTEND (Angular)
+├── src/app/
+│   ├── components/
+│   │   ├── auth/                    # Member 1
+│   │   │   ├── login/
+│   │   │   └── register/
+│   │   ├── medicines/               # Member 1
+│   │   │   ├── medicine-list/
+│   │   │   └── medicine-detail/
+│   │   ├── orders/                  # Member 2
+│   │   │   ├── cart/
+│   │   │   ├── checkout/
+│   │   │   └── order-history/
+│   │   └── prescriptions/           # Member 2
+│   │       └── upload-prescription/
+│   ├── services/                    # Shared
+│   │   ├── auth.service.ts
+│   │   ├── medicine.service.ts
+│   │   ├── order.service.ts
+│   │   └── prescription.service.ts
+│   └── guards/                      # Member 1
+│       ├── auth.guard.ts
+│       └── admin.guard.ts
