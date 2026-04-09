@@ -67,6 +67,21 @@ namespace PharmacyAPI.Controllers
             return Ok(prescriptions);
         }
 
+        // prescription approval 
 
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> UpdatePrescriptionStatus(int id, [FromQuery] string status)
+        {
+            var prescription = await _context.Prescriptions.FindAsync(id);
+
+            if (prescription == null)
+                return NotFound();
+
+            prescription.Status = status; // Approved / Rejected
+
+            await _context.SaveChangesAsync();
+
+            return Ok(prescription);
+        }
     }
 }
