@@ -11,5 +11,8 @@ public class Order
     public decimal TotalAmount { get; set; }
     public string Status { get; set; } = "Pending";
 
+    public int? PrescriptionId { get; set; }
+    public Prescription? Prescription { get; set; }
+
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }
