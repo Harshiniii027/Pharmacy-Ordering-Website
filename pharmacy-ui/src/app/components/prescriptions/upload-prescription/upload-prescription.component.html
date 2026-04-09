@@ -1,1 +1,22 @@
-<p>upload-prescription works!</p>
+<div class="container mt-5">
+  <div class="card shadow p-4">
+    <h3 class="mb-3 text-primary">Upload Prescription</h3>
+
+    <div class="mb-3">
+      <input type="file" class="form-control" (change)="onFileChange($event)">
+    </div>
+
+    <button class="btn btn-success" (click)="upload()">
+      Upload
+    </button>
+  </div>
+
+  <div *ngFor="let p of prescriptions" class="card mt-3 p-3">
+  <p>Status: {{p.status}}</p>
+
+  <img *ngIf="p.filePath"
+       [src]="'http://localhost:5268/' + p.filePath"
+       width="200">
+</div>
+
+</div>

@@ -96,7 +96,7 @@ namespace PharmacyAPI.Controllers
         }
 
 
-        // 🔥 ADD THIS HERE (Admin view)
+        //(Admin view)
         [HttpGet("all")]
         public async Task<IActionResult> GetAllOrders()
         {

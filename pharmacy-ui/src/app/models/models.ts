@@ -1,4 +1,5 @@
 // Member 1 & Member 2 - Shared Models
+//member 1
 export interface User {
   id: number;
   fullName: string;
@@ -48,4 +49,24 @@ export interface OrderItem {
   quantity: number;
   price: number;
   subtotal: number;
+}
+
+// memeber 2
+
+export interface OrderItem {
+  medicineId: number;
+  quantity: number;
+}
+
+export interface PlaceOrder {
+  userId: number;
+  prescriptionId?: number;
+  items: OrderItem[];
+}
+
+export interface Order {
+  id: number;
+  totalAmount: number;
+  status: string;
+  orderItems: any[];
 }

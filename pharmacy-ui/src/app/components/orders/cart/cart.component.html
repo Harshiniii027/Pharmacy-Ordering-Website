@@ -1,1 +1,15 @@
-<p>cart works!</p>
+<div class="container mt-5">
+  <h3 class="text-primary mb-3">Cart</h3>
+
+  <div *ngFor="let item of cart" class="card p-3 mb-2 shadow-sm">
+    <p><strong>{{item.name}}</strong></p>
+    <p>Qty: {{item.quantity}}</p>
+    <p>Price: ₹{{item.price}}</p>
+  </div>
+
+  <h4 class="mt-3">Total: ₹{{getTotal()}}</h4>
+
+  <a routerLink="/checkout" class="btn btn-success mt-3">
+    Proceed to Checkout
+  </a>
+</div>
