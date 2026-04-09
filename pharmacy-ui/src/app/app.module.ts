@@ -12,6 +12,16 @@ import { CheckoutComponent } from './components/orders/checkout/checkout.compone
 import { OrderHistoryComponent } from './components/orders/order-history/order-history.component';
 import { UploadPrescriptionComponent } from './components/prescriptions/upload-prescription/upload-prescription.component';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
+import { FormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { HomeComponent } from './components/home/home.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { AdminMedicinesComponent } from './components/admin/admin-medicines/admin-medicines.component';
+import { AdminOrdersComponent } from './components/admin/admin-orders/admin-orders.component';
+import { AdminUsersComponent } from './components/admin/admin-users/admin-users.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -24,13 +34,24 @@ import { AdminDashboardComponent } from './components/admin/admin-dashboard/admi
     CheckoutComponent,
     OrderHistoryComponent,
     UploadPrescriptionComponent,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    NavbarComponent,
+    HomeComponent,
+    ProfileComponent,
+    PageNotFoundComponent,
+    AdminMedicinesComponent,
+    AdminOrdersComponent,
+    AdminUsersComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
