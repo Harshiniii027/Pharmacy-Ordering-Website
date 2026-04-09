@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Pharmacy-Website\\PharmacyAPI\\PharmacyAPI.csproj": {}
+    "E:\\Pharmacy-Website\\Pharmacy-Ordering-Website\\PharmacyAPI\\PharmacyAPI.csproj": {}
   },
   "projects": {
-    "E:\\Pharmacy-Website\\PharmacyAPI\\PharmacyAPI.csproj": {
+    "E:\\Pharmacy-Website\\Pharmacy-Ordering-Website\\PharmacyAPI\\PharmacyAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Pharmacy-Website\\PharmacyAPI\\PharmacyAPI.csproj",
+        "projectUniqueName": "E:\\Pharmacy-Website\\Pharmacy-Ordering-Website\\PharmacyAPI\\PharmacyAPI.csproj",
         "projectName": "PharmacyAPI",
-        "projectPath": "E:\\Pharmacy-Website\\PharmacyAPI\\PharmacyAPI.csproj",
+        "projectPath": "E:\\Pharmacy-Website\\Pharmacy-Ordering-Website\\PharmacyAPI\\PharmacyAPI.csproj",
         "packagesPath": "C:\\Users\\G. Dhanya\\.nuget\\packages\\",
-        "outputPath": "E:\\Pharmacy-Website\\PharmacyAPI\\obj\\",
+        "outputPath": "E:\\Pharmacy-Website\\Pharmacy-Ordering-Website\\PharmacyAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -73,6 +73,10 @@
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[9.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.6, )"
             }
           },
           "imports": [
