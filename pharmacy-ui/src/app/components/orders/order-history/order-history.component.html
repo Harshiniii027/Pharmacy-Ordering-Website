@@ -1,1 +1,11 @@
-<p>order-history works!</p>
+<div class="container mt-5">
+  <h3 class="text-primary mb-3">My Orders</h3>
+
+  <div *ngFor="let order of orders" class="card p-3 mb-3 shadow">
+    <p><strong>Order ID:</strong> {{order.id}}</p>
+    <p><strong>Status:</strong> 
+      <span class="badge bg-info">{{order.status}}</span>
+    </p>
+    <p><strong>Total:</strong> ₹{{order.totalAmount}}</p>
+  </div>
+</div>

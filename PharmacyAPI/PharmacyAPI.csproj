@@ -21,4 +21,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Uploads\59f3111e-eeaa-41c9-9ece-281094bd8227.png" />
+    <None Include="wwwroot\Uploads\91dbff44-6879-46fb-85f2-b9a11ec32884.png" />
+    <None Include="wwwroot\Uploads\9da7d717-aaa4-41c2-b87c-eba51a919901.png" />
+    <None Include="wwwroot\Uploads\c6e065ae-b50e-4ff0-8158-dc13ade4ef93.png" />
+    <None Include="wwwroot\Uploads\e583bd7b-9cde-496e-be9f-ee2c5438ae24.png" />
+  </ItemGroup>
+
 </Project>

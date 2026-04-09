@@ -1,9 +1,28 @@
-import { Injectable } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrescriptionService {
 
-  constructor() { }
+  baseUrl = 'http://localhost:5268/api/prescription';
+
+  constructor(private http: HttpClient) {}
+
+  upload(file: File, userId: number) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('userId', userId.toString());
+
+    return this.http.post(`${this.baseUrl}/upload`, formData);
+  }
+
+  getUserPrescriptions(userId: number) {
+    return this.http.get(`${this.baseUrl}/user/${userId}`);
+  }
+
+  updateStatus(id: number, status: string) {
+    return this.http.put(`${this.baseUrl}/status/${id}?status=${status}`, {});
+  }
 }

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PharmacyAPI.Data;
-using PharmacyAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using PharmacyAPI.Data;
+using PharmacyAPI.DTOs;
+using PharmacyAPI.Models;
 
 namespace PharmacyAPI.Controllers
 {
@@ -21,8 +22,11 @@ namespace PharmacyAPI.Controllers
         //upload method
 
         [HttpPost("upload")]
-        public async Task<IActionResult> Upload(IFormFile file, int userId)
+        public async Task<IActionResult> Upload([FromForm] UploadPrescriptionDto dto)
         {
+            var file = dto.File;
+            var userId = dto.UserId;
+
             if (file == null || file.Length == 0)
                 return BadRequest("File is required");
 
@@ -33,7 +37,11 @@ namespace PharmacyAPI.Controllers
                 return BadRequest("Invalid file type");
 
             var fileName = Guid.NewGuid() + extension;
-            var filePath = Path.Combine("Uploads", fileName);
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Uploads");
+
+            Directory.CreateDirectory(folderPath);
+
+            var filePath = Path.Combine(folderPath, fileName);
 
             Directory.CreateDirectory("Uploads");
 
@@ -45,7 +53,7 @@ namespace PharmacyAPI.Controllers
             var prescription = new Prescription
             {
                 UserId = userId,
-                FilePath = filePath,
+                FilePath = "Uploads/" + fileName,
                 Status = "Pending"
             };
 
