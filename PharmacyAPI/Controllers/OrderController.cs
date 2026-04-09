@@ -19,6 +19,7 @@ namespace PharmacyAPI.Controllers
         }
 
         //place order
+
         [HttpPost("place")]
         public async Task<IActionResult> PlaceOrder([FromBody] PlaceOrderDto dto)
         {
@@ -26,7 +27,8 @@ namespace PharmacyAPI.Controllers
             {
                 UserId = dto.UserId,
                 OrderDate = DateTime.UtcNow,
-                Status = "Placed"
+                Status = "Placed",
+                PrescriptionId = dto.PrescriptionId
             };
 
             decimal total = 0;
@@ -37,6 +39,23 @@ namespace PharmacyAPI.Controllers
 
                 if (medicine == null)
                     return BadRequest($"Medicine ID {item.MedicineId} not found");
+
+                // check for prescription
+
+                if (medicine.RequiresPrescription)
+                {
+                    if (dto.PrescriptionId == null)
+                        return BadRequest($"Prescription required for {medicine.Name}");
+
+                    var prescription = await _context.Prescriptions
+                        .FindAsync(dto.PrescriptionId);
+
+                    if (prescription == null)
+                        return BadRequest("Invalid prescription");
+
+                    if (prescription.Status != "Approved")
+                        return BadRequest("Prescription not approved yet");
+                }
 
                 if (medicine.StockQuantity < item.Quantity)
                     return BadRequest($"Not enough stock for {medicine.Name}");
@@ -63,7 +82,7 @@ namespace PharmacyAPI.Controllers
             return Ok(order);
         }
 
-        //
+        // Get orders for specific user
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetOrders(int userId)
         {
@@ -76,8 +95,22 @@ namespace PharmacyAPI.Controllers
             return Ok(orders);
         }
 
-        //add order status[admin]
 
+        // 🔥 ADD THIS HERE (Admin view)
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Medicine)
+                .ToListAsync();
+
+            return Ok(orders);
+        }
+
+
+        // Update order status
         [HttpPut("status/{orderId}")]
         public async Task<IActionResult> UpdateStatus(int orderId, [FromQuery] string status)
         {
