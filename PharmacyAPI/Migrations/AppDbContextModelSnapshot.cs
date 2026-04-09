@@ -32,6 +32,12 @@ namespace PharmacyAPI.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+<<<<<<< HEAD
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+=======
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
@@ -39,6 +45,7 @@ namespace PharmacyAPI.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
                     b.ToTable("Categories");
                 });
 
@@ -96,6 +103,12 @@ namespace PharmacyAPI.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime(6)");
 
+<<<<<<< HEAD
+                    b.Property<int?>("PrescriptionId")
+                        .HasColumnType("int");
+
+=======
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -108,6 +121,11 @@ namespace PharmacyAPI.Migrations
 
                     b.HasKey("Id");
 
+<<<<<<< HEAD
+                    b.HasIndex("PrescriptionId");
+
+=======
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
@@ -181,7 +199,11 @@ namespace PharmacyAPI.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
+<<<<<<< HEAD
+                        .HasColumnType("longtext");
+=======
                         .HasColumnType("varchar(255)");
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -201,9 +223,12 @@ namespace PharmacyAPI.Migrations
 
                     b.HasKey("Id");
 
+<<<<<<< HEAD
+=======
                     b.HasIndex("Email")
                         .IsUnique();
 
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
                     b.ToTable("Users");
                 });
 
@@ -212,7 +237,11 @@ namespace PharmacyAPI.Migrations
                     b.HasOne("PharmacyAPI.Models.Category", "Category")
                         .WithMany("Medicines")
                         .HasForeignKey("CategoryId")
+<<<<<<< HEAD
+                        .OnDelete(DeleteBehavior.Cascade)
+=======
                         .OnDelete(DeleteBehavior.Restrict)
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -220,12 +249,27 @@ namespace PharmacyAPI.Migrations
 
             modelBuilder.Entity("PharmacyAPI.Models.Order", b =>
                 {
+<<<<<<< HEAD
+                    b.HasOne("PharmacyAPI.Models.Prescription", "Prescription")
+                        .WithMany()
+                        .HasForeignKey("PrescriptionId");
+
+                    b.HasOne("PharmacyAPI.Models.User", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Prescription");
+
+=======
                     b.HasOne("PharmacyAPI.Models.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
                     b.Navigation("User");
                 });
 
@@ -234,7 +278,11 @@ namespace PharmacyAPI.Migrations
                     b.HasOne("PharmacyAPI.Models.Medicine", "Medicine")
                         .WithMany("OrderItems")
                         .HasForeignKey("MedicineId")
+<<<<<<< HEAD
+                        .OnDelete(DeleteBehavior.Cascade)
+=======
                         .OnDelete(DeleteBehavior.Restrict)
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
                         .IsRequired();
 
                     b.HasOne("PharmacyAPI.Models.Order", "Order")

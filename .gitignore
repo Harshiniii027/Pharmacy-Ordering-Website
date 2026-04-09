@@ -1,3 +1,22 @@
+<<<<<<< HEAD
+.vs/ 
+bin/ 
+obj/ 
+*.user 
+*.suo 
+*.log 
+node_modules/ 
+.vs/ 
+bin/ 
+.vs/ 
+bin/ 
+obj/ 
+*.user 
+*.suo 
+*.log 
+node_modules/ 
+Uploads/ 
+=======
 # Build folders
 bin/
 obj/
@@ -19,3 +38,4 @@ node_modules/
 
 # Env
 .env
+>>>>>>> 8c2b404029de842c59498c985744151c0f00c2a6
