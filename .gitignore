@@ -1,0 +1,17 @@
+.vs/ 
+bin/ 
+obj/ 
+*.user 
+*.suo 
+*.log 
+node_modules/ 
+.vs/ 
+bin/ 
+.vs/ 
+bin/ 
+obj/ 
+*.user 
+*.suo 
+*.log 
+node_modules/ 
+Uploads/ 
