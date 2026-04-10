@@ -12,6 +12,7 @@ export class UploadPrescriptionComponent implements OnInit {
   selectedFile: File | null = null;
   uploading = false;
   loading = true;
+  userId: number = 0;
 
   constructor(
     private prescriptionService: PrescriptionService,
@@ -25,7 +26,11 @@ export class UploadPrescriptionComponent implements OnInit {
   loadPrescriptions() {
     const user = this.authService.getUser();
     if (user) {
-      this.prescriptionService.getUserPrescriptions(user.id).subscribe({
+      this.userId = user.id;
+      console.log("Logged in user:", user);
+      console.log("User ID:", this.userId);
+      
+      this.prescriptionService.getUserPrescriptions(this.userId).subscribe({
         next: (data: any) => {
           this.prescriptions = data;
           this.loading = false;
@@ -35,6 +40,8 @@ export class UploadPrescriptionComponent implements OnInit {
           this.loading = false;
         }
       });
+    } else {
+      this.loading = false;
     }
   }
 
