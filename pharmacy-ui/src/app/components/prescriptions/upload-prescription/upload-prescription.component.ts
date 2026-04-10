@@ -39,7 +39,7 @@ export class UploadPrescriptionComponent implements OnInit {
       return;
     }
 
-    this.prescriptionService.upload(this.file, this.userId)
+    this.prescriptionService.upload(this.file)
       .subscribe({
         next: () => {
           alert("Prescription uploaded successfully");
@@ -50,9 +50,9 @@ export class UploadPrescriptionComponent implements OnInit {
   }
 
   loadPrescriptions() {
-    this.prescriptionService.getUserPrescriptions(this.userId)
+    this.prescriptionService.getMyPrescriptions()
       .subscribe(data => {
-        this.prescriptions = data as any[];   // 🔥 IMPORTANT FIX
+        this.prescriptions = data as any[];   
       });
   }
 }
