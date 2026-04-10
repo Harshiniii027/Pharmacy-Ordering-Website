@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PharmacyAPI.Data;
 using PharmacyAPI.DTOs;
@@ -9,7 +11,8 @@ namespace PharmacyAPI.Controllers
     
         [Route("api/[controller]")]
         [ApiController]
-        public class PrescriptionController : ControllerBase
+    [Authorize]
+    public class PrescriptionController : ControllerBase
         {
             private readonly AppDbContext _context;
 
@@ -25,7 +28,7 @@ namespace PharmacyAPI.Controllers
         public async Task<IActionResult> Upload([FromForm] UploadPrescriptionDto dto)
         {
             var file = dto.File;
-            var userId = dto.UserId;
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
 
             if (file == null || file.Length == 0)
                 return BadRequest("File is required");
@@ -42,8 +45,6 @@ namespace PharmacyAPI.Controllers
             Directory.CreateDirectory(folderPath);
 
             var filePath = Path.Combine(folderPath, fileName);
-
-            Directory.CreateDirectory("Uploads");
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
@@ -65,9 +66,11 @@ namespace PharmacyAPI.Controllers
 
         //get prescription
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserPrescriptions(int userId)
+        [HttpGet("my")]
+        public async Task<IActionResult> GetMyPrescriptions()
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+
             var prescriptions = await _context.Prescriptions
                 .Where(p => p.UserId == userId)
                 .ToListAsync();
@@ -76,7 +79,7 @@ namespace PharmacyAPI.Controllers
         }
 
         // prescription approval 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("status/{id}")]
         public async Task<IActionResult> UpdatePrescriptionStatus(int id, [FromQuery] string status)
         {

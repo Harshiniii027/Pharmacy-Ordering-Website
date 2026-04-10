@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PharmacyAPI.Data;
 using PharmacyAPI.DTOs;
@@ -7,8 +9,10 @@ using PharmacyAPI.Models;
 
 namespace PharmacyAPI.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly AppDbContext _context;
@@ -23,9 +27,11 @@ namespace PharmacyAPI.Controllers
         [HttpPost("place")]
         public async Task<IActionResult> PlaceOrder([FromBody] PlaceOrderDto dto)
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+
             var order = new Order
             {
-                UserId = dto.UserId,
+                UserId = userId,
                 OrderDate = DateTime.UtcNow,
                 Status = "Placed",
                 PrescriptionId = dto.PrescriptionId
@@ -47,11 +53,13 @@ namespace PharmacyAPI.Controllers
                     if (dto.PrescriptionId == null)
                         return BadRequest($"Prescription required for {medicine.Name}");
 
-                    var prescription = await _context.Prescriptions
-                        .FindAsync(dto.PrescriptionId);
+                    var prescription = await _context.Prescriptions.FindAsync(dto.PrescriptionId);
 
                     if (prescription == null)
                         return BadRequest("Invalid prescription");
+
+                    if (prescription.UserId != userId)
+                        return BadRequest("Invalid prescription for this user");
 
                     if (prescription.Status != "Approved")
                         return BadRequest("Prescription not approved yet");
@@ -68,7 +76,7 @@ namespace PharmacyAPI.Controllers
                 };
 
                 total += medicine.Price * item.Quantity;
-
+              
                 medicine.StockQuantity -= item.Quantity;
 
                 order.OrderItems.Add(orderItem);
@@ -83,9 +91,11 @@ namespace PharmacyAPI.Controllers
         }
 
         // Get orders for specific user
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetOrders(int userId)
+        [HttpGet("my-orders")]
+        public async Task<IActionResult> GetOrders()
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Medicine)
@@ -97,6 +107,7 @@ namespace PharmacyAPI.Controllers
 
 
         //(Admin view)
+        [Authorize(Roles = "Admin")]
         [HttpGet("all")]
         public async Task<IActionResult> GetAllOrders()
         {
@@ -111,6 +122,7 @@ namespace PharmacyAPI.Controllers
 
 
         // Update order status
+        [Authorize(Roles = "Admin")]
         [HttpPut("status/{orderId}")]
         public async Task<IActionResult> UpdateStatus(int orderId, [FromQuery] string status)
         {
@@ -118,6 +130,11 @@ namespace PharmacyAPI.Controllers
 
             if (order == null)
                 return NotFound();
+
+            var validStatuses = new[] { "Placed", "Processing", "Shipped", "Delivered", "Cancelled" };
+
+            if (!validStatuses.Contains(status))
+                return BadRequest("Invalid status");
 
             order.Status = status;
 

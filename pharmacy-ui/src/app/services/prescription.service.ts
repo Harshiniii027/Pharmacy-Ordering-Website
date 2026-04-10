@@ -10,18 +10,29 @@ export class PrescriptionService {
 
   constructor(private http: HttpClient) {}
 
-  upload(file: File, userId: number) {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('userId', userId.toString());
+  // upload(file: File, userId: number) {
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+  //   formData.append('userId', userId.toString());
 
-    return this.http.post(`${this.baseUrl}/upload`, formData);
-  }
+  //   return this.http.post(`${this.baseUrl}/upload`, formData);
+  // }
 
-  getUserPrescriptions(userId: number) {
-    return this.http.get(`${this.baseUrl}/user/${userId}`);
-  }
+  upload(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
 
+  return this.http.post(`${this.baseUrl}/upload`, formData);
+}
+
+  // getUserPrescriptions(userId: number) {
+  //   return this.http.get(`${this.baseUrl}/user/${userId}`);
+  // }
+
+  getMyPrescriptions() {
+  return this.http.get(`${this.baseUrl}/my`);
+}
+      
   updateStatus(id: number, status: string) {
     return this.http.put(`${this.baseUrl}/status/${id}?status=${status}`, {});
   }
