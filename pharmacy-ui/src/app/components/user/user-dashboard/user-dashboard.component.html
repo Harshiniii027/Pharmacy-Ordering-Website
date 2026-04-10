@@ -1,0 +1,187 @@
+<div class="dashboard-container">
+  <div class="container">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+      <div class="welcome-content">
+        <div class="welcome-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="welcome-text">
+          <h2>{{greeting}}, <span class="user-name">{{user?.fullName?.split(' ')[0]}}</span>!</h2>
+          <p>Welcome back to your PharmaCare dashboard</p>
+        </div>
+      </div>
+      <div class="welcome-date">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card" (click)="navigateTo('/my-orders')">
+        <div class="stat-icon orders-icon">
+          <i class="fas fa-shopping-bag"></i>
+        </div>
+        <div class="stat-info">
+          <h3>{{stats.totalOrders}}</h3>
+          <p>Total Orders</p>
+        </div>
+        <div class="stat-trend">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <div class="stat-card" (click)="navigateTo('/my-orders')">
+        <div class="stat-icon spent-icon">
+          <i class="fas fa-rupee-sign"></i>
+        </div>
+        <div class="stat-info">
+          <h3>₹{{stats.totalSpent}}</h3>
+          <p>Total Spent</p>
+        </div>
+        <div class="stat-trend">
+          <i class="fas fa-chart-line"></i>
+        </div>
+      </div>
+
+      <div class="stat-card" (click)="navigateTo('/my-orders')">
+        <div class="stat-icon pending-icon">
+          <i class="fas fa-hourglass-half"></i>
+        </div>
+        <div class="stat-info">
+          <h3>{{stats.pendingOrders}}</h3>
+          <p>Pending Orders</p>
+        </div>
+        <div class="stat-trend">
+          <i class="fas fa-clock"></i>
+        </div>
+      </div>
+
+      <div class="stat-card" (click)="navigateTo('/my-prescriptions')">
+        <div class="stat-icon prescription-icon">
+          <i class="fas fa-file-prescription"></i>
+        </div>
+        <div class="stat-info">
+          <h3>{{stats.prescriptionsCount}}</h3>
+          <p>Prescriptions</p>
+        </div>
+        <div class="stat-trend">
+          <i class="fas fa-upload"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="actions-grid">
+        <div class="action-card" (click)="navigateTo('/medicines')">
+          <div class="action-icon">
+            <i class="fas fa-pills"></i>
+          </div>
+          <h4>Browse Medicines</h4>
+          <p>Shop for medicines</p>
+        </div>
+        <div class="action-card" (click)="navigateTo('/my-prescriptions')">
+          <div class="action-icon">
+            <i class="fas fa-upload"></i>
+          </div>
+          <h4>Upload Prescription</h4>
+          <p>Upload new prescription</p>
+        </div>
+        <div class="action-card" (click)="navigateTo('/my-orders')">
+          <div class="action-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+          <h4>Track Orders</h4>
+          <p>Check order status</p>
+        </div>
+        <div class="action-card" (click)="navigateTo('/profile')">
+          <div class="action-icon">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <h4>Update Profile</h4>
+          <p>Manage your account</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="recent-orders">
+      <div class="section-header">
+        <h3>Recent Orders</h3>
+        <a routerLink="/my-orders" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+      </div>
+
+      <div *ngIf="loading" class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+
+      <div *ngIf="!loading && recentOrders.length === 0" class="no-orders">
+        <i class="fas fa-shopping-bag"></i>
+        <h4>No orders yet</h4>
+        <p>Start shopping to see your orders here</p>
+        <button class="btn-primary" routerLink="/medicines">Shop Now</button>
+      </div>
+
+      <div class="orders-list" *ngIf="!loading && recentOrders.length > 0">
+        <div class="order-item" *ngFor="let order of recentOrders">
+          <div class="order-header">
+            <div class="order-id">
+              <i class="fas fa-hashtag"></i>
+              <span>Order #{{order.id}}</span>
+            </div>
+            <div class="order-date">
+              <i class="fas fa-calendar"></i>
+            </div>
+          </div>
+          <div class="order-body">
+            <div class="order-info">
+              <div class="order-items">
+                <i class="fas fa-box"></i>
+                <span>{{order.itemsCount}} items</span>
+              </div>
+              <div class="order-amount">
+                <i class="fas fa-rupee-sign"></i>
+                <span>{{order.totalAmount}}</span>
+              </div>
+            </div>
+            <div class="order-status">
+              <span class="status-badge {{getStatusBadgeClass(order.status)}}">
+                <i class="fas {{getStatusIcon(order.status)}}"></i>
+                {{order.status}}
+              </span>
+            </div>
+          </div>
+          <div class="order-footer">
+            <button class="btn-outline" (click)="navigateTo('/my-orders')">
+              View Details
+            </button>
+            <button class="btn-outline" *ngIf="order.status === 'Delivered'" (click)="navigateTo('/my-orders')">
+              Rate & Review
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Section -->
+    <div class="help-section">
+      <div class="help-card">
+        <div class="help-icon">
+          <i class="fas fa-headset"></i>
+        </div>
+        <div class="help-content">
+          <h4>Need Help?</h4>
+          <p>Our customer support team is available 24/7</p>
+          <a href="tel:18001234567" class="help-phone">
+            <i class="fas fa-phone"></i> 1800-123-4567
+          </a>
+          <a href="mailto:support@pharmacare.com" class="help-email">
+            <i class="fas fa-envelope"></i> support@pharmacare.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

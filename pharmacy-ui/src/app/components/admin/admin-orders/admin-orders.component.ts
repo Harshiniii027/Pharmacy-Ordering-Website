@@ -7,36 +7,36 @@ import { OrderService } from '../../../services/order.service';
   styleUrls: ['./admin-orders.component.css']
 })
 export class AdminOrdersComponent implements OnInit {
-
   orders: any[] = [];
+  loading = true;
 
   constructor(private orderService: OrderService) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadOrders();
   }
 
-  // 🔹 Load all orders
   loadOrders() {
     this.orderService.getAllOrders().subscribe({
       next: (res: any) => {
         this.orders = res;
+        this.loading = false;
       },
-      error: () => {
-        alert("Failed to load orders");
+      error: (err) => {
+        console.error('Error loading orders:', err);
+        this.loading = false;
       }
     });
   }
 
-  // 🔹 Update order status
   updateStatus(orderId: number, status: string) {
-    this.orderService.updateStatus(orderId, status).subscribe({
+    this.orderService.updateOrderStatus(orderId, status).subscribe({
       next: () => {
-        alert("Status updated");
-        this.loadOrders(); // refresh list
+        alert('Status updated successfully');
+        this.loadOrders();
       },
-      error: () => {
-        alert("Update failed");
+      error: (err) => {
+        alert('Failed to update status');
       }
     });
   }

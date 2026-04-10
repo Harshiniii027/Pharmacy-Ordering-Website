@@ -1,1 +1,141 @@
-<p>medicine-list works!</p>
+<div class="pharmacy-container">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>
+        <i class="fas fa-pills"></i> 
+        Our <span class="text-gradient">Medicines</span>
+      </h1>
+      <p>Quality medicines at affordable prices</p>
+    </div>
+    
+    <div class="row">
+      <!-- Sidebar Filters -->
+      <div class="col-lg-3">
+        <div class="filter-card">
+          <h4><i class="fas fa-filter"></i> Filters</h4>
+          
+          <!-- Search -->
+          <div class="filter-group">
+            <label><i class="fas fa-search"></i> Search Medicine</label>
+            <input type="text" class="form-control" placeholder="Search by name..." 
+                   [(ngModel)]="searchTerm" (input)="onSearch()">
+          </div>
+          
+          <!-- Categories -->
+          <div class="filter-group">
+            <label><i class="fas fa-tags"></i> Categories</label>
+            <div class="category-list">
+              <div class="category-item" [class.active]="selectedCategoryId === null" 
+                   (click)="onCategoryChange(null)">
+                All Categories
+              </div>
+              <div class="category-item" *ngFor="let cat of categories" 
+                   [class.active]="selectedCategoryId === cat.id"
+                   (click)="onCategoryChange(cat.id)">
+                <i class="fas fa-capsules"></i> {{cat.name}}
+                <span class="count">{{cat.medicinesCount}}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Prescription Filter -->
+          <div class="filter-group">
+            <label><i class="fas fa-prescription-bottle"></i> Medicine Type</label>
+            <div class="type-options">
+              <label class="type-option">
+                <input type="radio" name="type" [value]="null" [(ngModel)]="prescriptionFilter" (change)="filterMedicines()">
+                <span>All</span>
+              </label>
+              <label class="type-option">
+                <input type="radio" name="type" [value]="false" [(ngModel)]="prescriptionFilter" (change)="filterMedicines()">
+                <span>OTC</span>
+              </label>
+              <label class="type-option">
+                <input type="radio" name="type" [value]="true" [(ngModel)]="prescriptionFilter" (change)="filterMedicines()">
+                <span>Prescription Required</span>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Clear Filters -->
+          <button class="btn-clear-filters" (click)="clearFilters()">
+            <i class="fas fa-eraser"></i> Clear All Filters
+          </button>
+        </div>
+      </div>
+      
+      <!-- Medicine Grid -->
+      <div class="col-lg-9">
+        <!-- Results Info -->
+        <div class="results-info">
+          <span><i class="fas fa-list"></i> {{filteredMedicines.length}} medicines found</span>
+        </div>
+        
+        <!-- Loading Spinner -->
+        <div *ngIf="loading" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Loading medicines...</p>
+        </div>
+        
+        <!-- No Results -->
+        <div *ngIf="!loading && filteredMedicines.length === 0" class="no-results">
+          <i class="fas fa-prescription-bottle fa-4x"></i>
+          <h4>No medicines found</h4>
+          <p>Try adjusting your search or filter criteria</p>
+          <button class="btn btn-primary" (click)="clearFilters()">Clear Filters</button>
+        </div>
+        
+        <!-- Medicine Grid -->
+        <div class="medicine-grid" *ngIf="!loading && filteredMedicines.length > 0">
+          <div class="medicine-card" *ngFor="let medicine of filteredMedicines">
+            <!-- Prescription Badge -->
+            <div class="prescription-badge" *ngIf="medicine.requiresPrescription">
+              <i class="fas fa-prescription-bottle"></i> Prescription Required
+            </div>
+            <div class="otc-badge" *ngIf="!medicine.requiresPrescription">
+              <i class="fas fa-check-circle"></i> OTC Available
+            </div>
+            
+            <!-- Medicine Image/Icon -->
+            <div class="medicine-image">
+              <i class="fas fa-pills fa-4x" [style.color]="medicine.requiresPrescription ? '#ff6b35' : '#00cc88'"></i>
+            </div>
+            
+            <!-- Medicine Details -->
+            <div class="medicine-details">
+              <h3>{{medicine.name}}</h3>
+              <p class="description">{{medicine.description | slice:0:80}}...</p>
+              <div class="medicine-meta">
+                <span class="manufacturer">
+                  <i class="fas fa-industry"></i> {{medicine.manufacturer || 'PharmaCare'}}
+                </span>
+                <span class="dosage" *ngIf="medicine.dosage">
+                  <i class="fas fa-chart-line"></i> {{medicine.dosage}}
+                </span>
+              </div>
+              <div class="stock-info" [class.low-stock]="medicine.stockQuantity < 20">
+                <i class="fas fa-boxes"></i> 
+                {{medicine.stockQuantity > 0 ? (medicine.stockQuantity < 20 ? 'Only ' + medicine.stockQuantity + ' left' : 'In Stock') : 'Out of Stock'}}
+              </div>
+              <div class="price-section">
+                <div class="price">₹{{medicine.price}}</div>
+                <div class="actions">
+                  <a [routerLink]="['/medicine', medicine.id]" class="btn-details">
+                    <i class="fas fa-info-circle"></i> Details
+                  </a>
+                  <button class="btn-add" (click)="addToCart(medicine)" 
+                          [disabled]="medicine.stockQuantity === 0">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

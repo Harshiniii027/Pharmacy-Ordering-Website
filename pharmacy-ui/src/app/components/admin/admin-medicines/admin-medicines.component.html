@@ -1,1 +1,124 @@
-<p>admin-medicines works!</p>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-pills me-2"></i>Medicine Management</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMedicineModal">
+      <i class="fas fa-plus me-2"></i>Add Medicine
+    </button>
+  </div>
+  
+  <div class="card shadow">
+    <div class="card-body">
+      <div *ngIf="loading" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+      </div>
+      
+      <div class="table-responsive" *ngIf="!loading">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Prescription</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let medicine of medicines">
+              <td>{{medicine.id}}</td>
+              <td>{{medicine.name}}</td>
+              <td>{{medicine.categoryName}}</td>
+              <td>₹{{medicine.price}}</td>
+              <td>
+                <span [class.text-danger]="medicine.stockQuantity < 10">
+                  {{medicine.stockQuantity}}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [class.bg-warning]="medicine.requiresPrescription" 
+                      [class.bg-success]="!medicine.requiresPrescription">
+                  {{medicine.requiresPrescription ? 'Required' : 'OTC'}}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" (click)="editMedicine(medicine)">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" (click)="deleteMedicine(medicine.id)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Medicine Modal -->
+<div class="modal fade" id="addMedicineModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">{{editingMedicine ? 'Edit' : 'Add'}} Medicine</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form #medicineForm="ngForm">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" [(ngModel)]="medicineData.name" name="name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Category</label>
+              <select class="form-select" [(ngModel)]="medicineData.categoryId" name="categoryId" required>
+                <option *ngFor="let cat of categories" [value]="cat.id">{{cat.name}}</option>
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Price (₹)</label>
+              <input type="number" class="form-control" [(ngModel)]="medicineData.price" name="price" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Stock Quantity</label>
+              <input type="number" class="form-control" [(ngModel)]="medicineData.stockQuantity" name="stockQuantity" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Dosage</label>
+              <input type="text" class="form-control" [(ngModel)]="medicineData.dosage" name="dosage" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Packaging</label>
+              <input type="text" class="form-control" [(ngModel)]="medicineData.packaging" name="packaging" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Manufacturer</label>
+              <input type="text" class="form-control" [(ngModel)]="medicineData.manufacturer" name="manufacturer" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Requires Prescription</label>
+              <select class="form-select" [(ngModel)]="medicineData.requiresPrescription" name="requiresPrescription">
+                <option [value]="false">No (OTC)</option>
+                <option [value]="true">Yes (Prescription Required)</option>
+              </select>
+            </div>
+            <div class="col-12 mb-3">
+              <label class="form-label">Description</label>
+              <textarea class="form-control" rows="3" [(ngModel)]="medicineData.description" name="description" required></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="saveMedicine()" [disabled]="saving">
+          {{ saving ? 'Saving...' : 'Save Medicine' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

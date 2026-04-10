@@ -1,0 +1,16 @@
+.container {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+}
+
+.display-1 {
+  font-size: 6rem;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  padding: 12px 30px;
+}

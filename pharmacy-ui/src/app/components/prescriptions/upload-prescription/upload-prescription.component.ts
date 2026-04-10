@@ -8,51 +8,83 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./upload-prescription.component.css']
 })
 export class UploadPrescriptionComponent implements OnInit {
-
-  file!: File;
-  userId: number = 0;
-
   prescriptions: any[] = [];
+  selectedFile: File | null = null;
+  uploading = false;
+  loading = true;
 
-  constructor(private prescriptionService: PrescriptionService,private authService: AuthService) {}
+  constructor(
+    private prescriptionService: PrescriptionService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
-  const user = this.authService.getUser();   
-
-  if (user) {
-    this.userId = user.id;   
-  }
-
-  console.log("Logged in user:", user);
-  console.log("User ID:", this.userId);
-
-  this.loadPrescriptions();
-}
-
-  onFileChange(event: any) {
-    this.file = event.target.files[0];
-  }
-
-  upload() {
-    if (!this.file) {
-      alert("Please select a file");
-      return;
-    }
-
-    this.prescriptionService.upload(this.file, this.userId)
-      .subscribe({
-        next: () => {
-          alert("Prescription uploaded successfully");
-          this.loadPrescriptions();   // ✅ refresh
-        },
-        error: () => alert("Upload failed")
-      });
+    this.loadPrescriptions();
   }
 
   loadPrescriptions() {
-    this.prescriptionService.getUserPrescriptions(this.userId)
-      .subscribe(data => {
-        this.prescriptions = data as any[];   // 🔥 IMPORTANT FIX
+    const user = this.authService.getUser();
+    if (user) {
+      this.prescriptionService.getUserPrescriptions(user.id).subscribe({
+        next: (data: any) => {
+          this.prescriptions = data;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error loading prescriptions:', error);
+          this.loading = false;
+        }
       });
+    }
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+      if (allowedTypes.includes(file.type)) {
+        this.selectedFile = file;
+      } else {
+        alert('Please upload JPEG, PNG, or PDF file');
+        event.target.value = '';
+      }
+    }
+  }
+
+  uploadPrescription() {
+    if (!this.selectedFile) {
+      alert('Please select a file to upload');
+      return;
+    }
+
+    const user = this.authService.getUser();
+    if (!user) {
+      alert('Please login to upload prescription');
+      return;
+    }
+
+    this.uploading = true;
+    this.prescriptionService.uploadPrescription(user.id, this.selectedFile).subscribe({
+      next: () => {
+        this.uploading = false;
+        alert('Prescription uploaded successfully');
+        this.selectedFile = null;
+        const fileInput = document.getElementById('prescriptionFile') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+        this.loadPrescriptions();
+      },
+      error: (error) => {
+        this.uploading = false;
+        alert('Failed to upload prescription: ' + (error.error?.message || 'Unknown error'));
+      }
+    });
+  }
+
+  getStatusBadgeClass(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'approved': return 'bg-success';
+      case 'rejected': return 'bg-danger';
+      default: return 'bg-warning';
+    }
   }
 }

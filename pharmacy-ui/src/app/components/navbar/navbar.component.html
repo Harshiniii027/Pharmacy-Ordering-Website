@@ -1,8 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container">
     <!-- Brand/Logo -->
     <a class="navbar-brand" routerLink="/home">
-      <i class="fas fa-hospital-user"></i> PharmaCare
+      <div class="brand-icon">
+        <i class="fas fa-hospital-user"></i>
+      </div>
+      <span class="brand-text">Pharma<span class="brand-highlight">Care</span></span>
     </a>
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -10,61 +13,101 @@
     </button>
     
     <div class="collapse navbar-collapse" id="navbarNav">
-      <!-- Main Navigation Links -->
-      <ul class="navbar-nav me-auto">
+      <!-- Main Navigation Links - Changes based on login -->
+      <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/home" routerLinkActive="active">🏠 Home</a>
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">
+            <i class="fas fa-home"></i> Home
+          </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/shop" routerLinkActive="active">💊 Shop</a>
+        
+        <!-- Only show Medicines link if logged in -->
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" routerLink="/medicines" routerLinkActive="active">
+            <i class="fas fa-pills"></i> Medicines
+          </a>
+        </li>
+        
+        <!-- Only show Prescriptions link if logged in -->
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" routerLink="/my-prescriptions" routerLinkActive="active">
+            <i class="fas fa-file-prescription"></i> Prescriptions
+          </a>
         </li>
       </ul>
       
       <!-- Right Side Links -->
-      <ul class="navbar-nav ms-auto">
-        <!-- Customer Links (Logged In) -->
+      <ul class="navbar-nav">
+        <!-- Logged In User -->
         <ng-container *ngIf="isLoggedIn">
+          <!-- Cart -->
           <li class="nav-item">
-            <a class="nav-link" routerLink="/cart" routerLinkActive="active">
-              🛒 Cart <span class="badge bg-danger" *ngIf="cartCount > 0">{{cartCount}}</span>
+            <a class="nav-link cart-link" routerLink="/cart" routerLinkActive="active">
+              <i class="fas fa-shopping-cart"></i>
+              <span class="cart-badge" *ngIf="cartCount > 0">{{cartCount}}</span>
             </a>
           </li>
+          
+          <!-- User Dropdown -->
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              👤 {{userName}}
+              <i class="fas fa-user-circle"></i> {{userName}}
             </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" routerLink="/profile">📋 My Profile</a></li>
-              <li><a class="dropdown-item" routerLink="/my-orders">📦 My Orders</a></li>
-              <li><a class="dropdown-item" routerLink="/my-prescriptions">📄 My Prescriptions</a></li>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" routerLink="/dashboard">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+              </a></li>
+              <li><a class="dropdown-item" routerLink="/profile">
+                <i class="fas fa-id-card"></i> My Profile
+              </a></li>
+              <li><a class="dropdown-item" routerLink="/my-orders">
+                <i class="fas fa-truck"></i> My Orders
+              </a></li>
+              <li><a class="dropdown-item" routerLink="/my-prescriptions">
+                <i class="fas fa-file-prescription"></i> My Prescriptions
+              </a></li>
               <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-danger" (click)="logout()">🚪 Logout</a></li>
+              <li><a class="dropdown-item text-danger" (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+              </a></li>
             </ul>
           </li>
+          
+          <!-- Admin Dropdown (only for admin) -->
+          <ng-container *ngIf="isAdmin">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle admin-link" href="#" role="button" data-bs-toggle="dropdown">
+                <i class="fas fa-shield-alt"></i> Admin
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" routerLink="/admin/dashboard">
+                  <i class="fas fa-chart-line"></i> Dashboard
+                </a></li>
+                <li><a class="dropdown-item" routerLink="/admin/medicines">
+                  <i class="fas fa-pills"></i> Medicines
+                </a></li>
+                <li><a class="dropdown-item" routerLink="/admin/orders">
+                  <i class="fas fa-shopping-cart"></i> Orders
+                </a></li>
+                <li><a class="dropdown-item" routerLink="/admin/users">
+                  <i class="fas fa-users"></i> Users
+                </a></li>
+              </ul>
+            </li>
+          </ng-container>
         </ng-container>
         
-        <!-- Admin Links -->
-        <ng-container *ngIf="isAdmin">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              👑 Admin Panel
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" routerLink="/admin/dashboard">📊 Dashboard</a></li>
-              <li><a class="dropdown-item" routerLink="/admin/medicines">💊 Manage Medicines</a></li>
-              <li><a class="dropdown-item" routerLink="/admin/orders">📦 Manage Orders</a></li>
-              <li><a class="dropdown-item" routerLink="/admin/users">👥 Manage Users</a></li>
-            </ul>
-          </li>
-        </ng-container>
-        
-        <!-- Guest Links (Logged Out) -->
+        <!-- Guest Links (Not Logged In) -->
         <ng-container *ngIf="!isLoggedIn">
           <li class="nav-item">
-            <a class="nav-link" routerLink="/login" routerLinkActive="active">🔐 Login</a>
+            <a class="nav-link btn-login" routerLink="/login">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLink="/register" routerLinkActive="active">📝 Register</a>
+            <a class="nav-link btn-register" routerLink="/register">
+              <i class="fas fa-user-plus"></i> Register
+            </a>
           </li>
         </ng-container>
       </ul>

@@ -1,28 +1,31 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Prescription } from '../models/models';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PrescriptionService {
-
-  baseUrl = 'http://localhost:5268/api/prescription';
+  private apiUrl = 'http://localhost:5268/api/Prescription';
 
   constructor(private http: HttpClient) {}
 
-  upload(file: File, userId: number) {
+  uploadPrescription(userId: number, file: File): Observable<Prescription> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('userId', userId.toString());
-
-    return this.http.post(`${this.baseUrl}/upload`, formData);
+    return this.http.post<Prescription>(`${this.apiUrl}/upload`, formData);
   }
 
-  getUserPrescriptions(userId: number) {
-    return this.http.get(`${this.baseUrl}/user/${userId}`);
+  getUserPrescriptions(userId: number): Observable<Prescription[]> {
+    return this.http.get<Prescription[]>(`${this.apiUrl}/user/${userId}`);
   }
 
-  updateStatus(id: number, status: string) {
-    return this.http.put(`${this.baseUrl}/status/${id}?status=${status}`, {});
+  // Admin Methods
+  getAllPrescriptions(): Observable<Prescription[]> {
+    return this.http.get<Prescription[]>(`${this.apiUrl}/all`);
+  }
+
+  updatePrescriptionStatus(id: number, status: string, notes?: string): Observable<Prescription> {
+    return this.http.put<Prescription>(`${this.apiUrl}/status/${id}`, { status, notes });
   }
 }

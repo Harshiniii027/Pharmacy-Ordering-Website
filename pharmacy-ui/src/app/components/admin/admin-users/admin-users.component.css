@@ -1,0 +1,12 @@
+.table th, .table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.form-select-sm {
+  font-size: 0.8rem;
+}

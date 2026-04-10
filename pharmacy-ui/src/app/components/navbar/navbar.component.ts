@@ -1,43 +1,62 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   cartCount: number = 0;
+  isLoggedIn: boolean = false;
+  userName: string = '';
+  isAdmin: boolean = false;
+  private subscriptions: Subscription = new Subscription();
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private cartService: CartService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.updateCartCount();
-    // Listen to cart changes
-    window.addEventListener('storage', () => this.updateCartCount());
-  }
+    this.subscriptions.add(
+      this.authService.currentUser.subscribe(user => {
+        this.isLoggedIn = !!user;
+        this.userName = user?.fullName?.split(' ')[0] || '';
+        this.isAdmin = this.authService.isAdmin();
+        
+        // Update cart count when login status changes
+        if (this.isLoggedIn) {
+          this.updateCartCount();
+        } else {
+          this.cartCount = 0;
+        }
+      })
+    );
 
-  get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
-  }
-
-  get userName(): string {
-    const user = this.authService.getUser();
-    return user ? user.fullName.split(' ')[0] : '';
-  }
-
-  get isAdmin(): boolean {
-    return this.authService.isAdmin();
+    this.subscriptions.add(
+      this.cartService.cartItems$.subscribe(() => {
+        if (this.isLoggedIn) {
+          this.updateCartCount();
+        }
+      })
+    );
   }
 
   updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    this.cartCount = cart.reduce((sum: number, item: any) => sum + item.quantity, 0);
+    this.cartCount = this.cartService.getCartCount();
   }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/home']);
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

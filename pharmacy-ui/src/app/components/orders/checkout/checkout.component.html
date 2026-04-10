@@ -1,14 +1,98 @@
 <div class="container mt-5">
-  <div class="card p-4 shadow">
-    <h3 class="text-success mb-3">Checkout</h3>
-
-    <div class="mb-3">
-      <label class="form-label">Prescription ID (if required)</label>
-      <input type="number" class="form-control" [(ngModel)]="prescriptionId">
+  <div class="row" *ngIf="!orderPlaced; else orderSuccess">
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fas fa-list me-2"></i>Order Summary</h5>
+        </div>
+        <div class="card-body">
+          <div *ngFor="let item of cartItems" class="d-flex justify-content-between mb-3">
+            <div>
+              <h6 class="mb-0">{{item.name}}</h6>
+              <small class="text-muted">Quantity: {{item.quantity}}</small>
+              <span *ngIf="item.requiresPrescription" class="badge bg-warning ms-2">
+                <i class="fas fa-prescription-bottle"></i> Rx Required
+              </span>
+            </div>
+            <div class="fw-bold">₹{{item.price * item.quantity}}</div>
+          </div>
+          <hr>
+          <div class="d-flex justify-content-between">
+            <strong>Total Amount</strong>
+            <strong class="text-primary fs-5">₹{{totalAmount}}</strong>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <button class="btn btn-primary w-100" (click)="placeOrder()">
-      Place Order
-    </button>
+    
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fas fa-file-prescription me-2"></i>Prescription</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="cartItems && cartItems.length > 0; else noPrescription">
+            <p class="text-muted small">Upload prescription for:</p>
+            <ul class="list-unstyled">
+              <li *ngFor="let item of cartItems">
+                <div *ngIf="item.requiresPrescription">
+                  <small>• {{item.name}}</small>
+                </div>
+              </li>
+            </ul>
+            
+            <div class="mb-3">
+              <label class="form-label">Select Prescription</label>
+              <select class="form-select" [(ngModel)]="selectedPrescriptionId">
+                <option [value]="null">-- Select Prescription --</option>
+                <option *ngFor="let p of prescriptions" [value]="p.id">
+                  {{p.uploadedAt | date}} - {{p.status}}
+                </option>
+              </select>
+            </div>
+            
+            <button class="btn btn-outline-primary btn-sm w-100" routerLink="/my-prescriptions">
+              <i class="fas fa-upload me-2"></i>Upload New Prescription
+            </button>
+          </div>
+          
+          <ng-template #noPrescription>
+            <p class="text-success mb-0">
+              <i class="fas fa-check-circle me-2"></i>No prescription required
+            </p>
+          </ng-template>
+        </div>
+      </div>
+      
+      <div class="card shadow-sm mt-3">
+        <div class="card-body">
+          <button class="btn btn-success w-100" (click)="placeOrder()" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="fas fa-check-circle me-2" *ngIf="!loading"></i>
+            {{ loading ? 'Placing Order...' : 'Place Order' }}
+          </button>
+          <button class="btn btn-outline-secondary w-100 mt-2" routerLink="/cart">
+            <i class="fas fa-arrow-left me-2"></i>Back to Cart
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
+  
+  <ng-template #orderSuccess>
+    <div class="text-center py-5">
+      <i class="fas fa-check-circle text-success fa-5x mb-3"></i>
+      <h2 class="mb-3">Order Placed Successfully!</h2>
+      <p class="lead">Your order #{{orderId}} has been placed successfully.</p>
+      <p class="text-muted">You will receive a confirmation email shortly.</p>
+      <div class="mt-4">
+        <button class="btn btn-primary me-2" (click)="goToOrders()">
+          <i class="fas fa-truck me-2"></i>View My Orders
+        </button>
+        <button class="btn btn-outline-primary" (click)="continueShopping()">
+          <i class="fas fa-shopping me-2"></i>Continue Shopping
+        </button>
+      </div>
+    </div>
+  </ng-template>
 </div>

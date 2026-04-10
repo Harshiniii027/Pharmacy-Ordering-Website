@@ -1,1 +1,81 @@
-<p>profile works!</p>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow-sm text-center">
+        <div class="card-body">
+          <div class="mb-3">
+            <i class="fas fa-user-circle fa-5x text-primary"></i>
+          </div>
+          <h4>{{user?.fullName}}</h4>
+          <p class="text-muted">{{user?.role}}</p>
+          <hr>
+          <div class="text-start">
+            <p><i class="fas fa-envelope me-2 text-primary"></i> {{user?.email}}</p>
+            <p><i class="fas fa-phone me-2 text-primary"></i> {{user?.phone}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Profile</h5>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="updateProfile()">
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" [(ngModel)]="profileData.fullName" name="fullName" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" [(ngModel)]="profileData.phone" name="phone" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" [(ngModel)]="profileData.email" name="email" disabled>
+              <small class="text-muted">Email cannot be changed</small>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" [disabled]="updating">
+              <span *ngIf="updating" class="spinner-border spinner-border-sm me-2"></span>
+              {{ updating ? 'Updating...' : 'Update Profile' }}
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="card shadow-sm mt-3">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fas fa-key me-2"></i>Change Password</h5>
+        </div>
+        <div class="card-body">
+          <form (ngSubmit)="changePassword()">
+            <div class="mb-3">
+              <label class="form-label">Current Password</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordData.currentPassword" name="currentPassword" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">New Password</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordData.newPassword" name="newPassword" required>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Confirm New Password</label>
+              <input type="password" class="form-control" [(ngModel)]="passwordData.confirmPassword" name="confirmPassword" required>
+            </div>
+            
+            <button type="submit" class="btn btn-warning" [disabled]="changingPassword">
+              <span *ngIf="changingPassword" class="spinner-border spinner-border-sm me-2"></span>
+              {{ changingPassword ? 'Changing...' : 'Change Password' }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

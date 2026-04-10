@@ -22,6 +22,11 @@ import { AdminMedicinesComponent } from './components/admin/admin-medicines/admi
 import { AdminOrdersComponent } from './components/admin/admin-orders/admin-orders.component';
 import { AdminUsersComponent } from './components/admin/admin-users/admin-users.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { UserDashboardComponent } from './components/user/user-dashboard/user-dashboard.component';
+import { UserOrdersComponent } from './components/user/user-orders/user-orders.component';
+import { UserPrescriptionsComponent } from './components/user/user-prescriptions/user-prescriptions.component';
+import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
+import { UserAddressesComponent } from './components/user/user-addresses/user-addresses.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +46,12 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     PageNotFoundComponent,
     AdminMedicinesComponent,
     AdminOrdersComponent,
-    AdminUsersComponent
+    AdminUsersComponent,
+    UserDashboardComponent,
+    UserOrdersComponent,
+    UserPrescriptionsComponent,
+    UserProfileComponent,
+    UserAddressesComponent
   ],
   imports: [
     BrowserModule,

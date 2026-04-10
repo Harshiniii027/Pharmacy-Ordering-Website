@@ -1,22 +1,72 @@
 <div class="container mt-5">
-  <div class="card shadow p-4">
-    <h3 class="mb-3 text-primary">Upload Prescription</h3>
-
-    <div class="mb-3">
-      <input type="file" class="form-control" (change)="onFileChange($event)">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white">
+          <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Upload Prescription</h5>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            <i class="fas fa-file-prescription fa-3x text-primary mb-3"></i>
+            <p class="text-muted">Upload your prescription (JPEG, PNG, PDF)</p>
+          </div>
+          
+          <input type="file" id="prescriptionFile" class="form-control mb-3" 
+                 (change)="onFileSelected($event)" accept="image/jpeg,image/png,image/jpg,application/pdf">
+          
+          <div *ngIf="selectedFile" class="alert alert-info">
+            <i class="fas fa-file me-2"></i>{{selectedFile.name}}
+          </div>
+          
+          <button class="btn btn-primary w-100" (click)="uploadPrescription()" [disabled]="uploading">
+            <span *ngIf="uploading" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="fas fa-cloud-upload-alt me-2" *ngIf="!uploading"></i>
+            {{ uploading ? 'Uploading...' : 'Upload Prescription' }}
+          </button>
+        </div>
+      </div>
+      
+      <div class="card shadow-sm mt-3">
+        <div class="card-body">
+          <div class="text-center">
+            <i class="fas fa-info-circle text-info mb-2"></i>
+            <h6>Why upload prescription?</h6>
+            <small class="text-muted">Some medicines require a valid prescription. Upload your prescription for verification.</small>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <button class="btn btn-success" (click)="upload()">
-      Upload
-    </button>
+    
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="fas fa-history me-2"></i>My Prescriptions</h5>
+        </div>
+        <div class="card-body">
+          <div *ngIf="loading" class="text-center py-3">
+            <div class="spinner-border spinner-border-sm text-primary"></div>
+          </div>
+          
+          <div *ngIf="!loading && prescriptions.length === 0" class="text-center py-3">
+            <p class="text-muted mb-0">No prescriptions uploaded yet</p>
+          </div>
+          
+          <div class="list-group" *ngIf="!loading && prescriptions.length > 0">
+            <div class="list-group-item" *ngFor="let p of prescriptions">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <i class="fas fa-file-prescription me-2 text-primary"></i>
+                  <span>Uploaded: {{p.uploadedAt | date:'medium'}}</span>
+                </div>
+                <span class="badge {{getStatusBadgeClass(p.status)}}">{{p.status}}</span>
+              </div>
+              <div *ngIf="p.status === 'Rejected'" class="mt-2 text-danger small">
+                <i class="fas fa-exclamation-triangle me-1"></i>Please upload a clear prescription
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div *ngFor="let p of prescriptions" class="card mt-3 p-3">
-  <p>Status: {{p.status}}</p>
-
-  <img *ngIf="p.filePath"
-       [src]="'http://localhost:5268/' + p.filePath"
-       width="200">
-</div>
-
 </div>

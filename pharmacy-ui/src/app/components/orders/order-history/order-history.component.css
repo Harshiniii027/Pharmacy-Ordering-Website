@@ -1,0 +1,19 @@
+.card {
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.badge {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+}
