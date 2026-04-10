@@ -14,7 +14,7 @@ export class LoginComponent {
   };
   errorMessage = '';
   loading = false;
-  returnUrl: string = '/dashboard';  // Changed from '/home'
+  returnUrl: string = '/dashboard';
 
   constructor(
     private authService: AuthService, 
@@ -23,8 +23,15 @@ export class LoginComponent {
   ) {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
     
+    // If already logged in, redirect to dashboard
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
+      const user = this.authService.getUser();
+      console.log('Already logged in as:', user);
+      if (user?.role?.toLowerCase() === 'admin') {
+        this.router.navigate(['/admin/dashboard']);
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
     }
   }
 
@@ -32,14 +39,29 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
     
+    console.log('Attempting login with:', this.loginData.email);
+    
     this.authService.login(this.loginData).subscribe({
-      next: () => {
+      next: (response) => {
         this.loading = false;
-        this.router.navigate(['/dashboard']);
+        console.log('Login successful, response:', response);
+        
+        const user = this.authService.getUser();
+        console.log('User after login:', user);
+        
+        // Redirect based on role
+        if (user?.role?.toLowerCase() === 'admin') {
+          console.log('Redirecting to admin dashboard');
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          console.log('Redirecting to user dashboard');
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: (error) => {
         this.loading = false;
         this.errorMessage = error.message || 'Invalid email or password';
+        console.error('Login error:', error);
       }
     });
   }

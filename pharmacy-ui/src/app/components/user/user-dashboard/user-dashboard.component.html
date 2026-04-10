@@ -13,6 +13,7 @@
       </div>
       <div class="welcome-date">
         <i class="fas fa-calendar-alt"></i>
+        <span>{{currentTime | date:'fullDate'}}</span>
       </div>
     </div>
 
@@ -110,7 +111,7 @@
     <div class="recent-orders">
       <div class="section-header">
         <h3>Recent Orders</h3>
-        <a routerLink="/my-orders" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+        <a class="view-all" (click)="navigateTo('/my-orders')">View All <i class="fas fa-arrow-right"></i></a>
       </div>
 
       <div *ngIf="loading" class="loading-spinner">
@@ -121,7 +122,7 @@
         <i class="fas fa-shopping-bag"></i>
         <h4>No orders yet</h4>
         <p>Start shopping to see your orders here</p>
-        <button class="btn-primary" routerLink="/medicines">Shop Now</button>
+        <button class="btn-primary" (click)="navigateTo('/medicines')">Shop Now</button>
       </div>
 
       <div class="orders-list" *ngIf="!loading && recentOrders.length > 0">
@@ -133,6 +134,7 @@
             </div>
             <div class="order-date">
               <i class="fas fa-calendar"></i>
+              <span>{{order.orderDate | date:'mediumDate'}}</span>
             </div>
           </div>
           <div class="order-body">
@@ -154,12 +156,7 @@
             </div>
           </div>
           <div class="order-footer">
-            <button class="btn-outline" (click)="navigateTo('/my-orders')">
-              View Details
-            </button>
-            <button class="btn-outline" *ngIf="order.status === 'Delivered'" (click)="navigateTo('/my-orders')">
-              Rate & Review
-            </button>
+            <button class="btn-outline" (click)="navigateTo('/my-orders')">View Details</button>
           </div>
         </div>
       </div>

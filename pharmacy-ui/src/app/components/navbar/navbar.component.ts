@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, User } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { Subscription } from 'rxjs';
 
@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   userName: string = '';
   isAdmin: boolean = false;
+  userRole: string = '';
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -23,37 +24,67 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.updateUserState();
+    
     this.subscriptions.add(
       this.authService.currentUser.subscribe(user => {
-        this.isLoggedIn = !!user;
-        this.userName = user?.fullName?.split(' ')[0] || '';
-        this.isAdmin = this.authService.isAdmin();
-        
-        // Update cart count when login status changes
-        if (this.isLoggedIn) {
-          this.updateCartCount();
-        } else {
-          this.cartCount = 0;
-        }
+        console.log('Navbar received user update:', user);
+        this.updateUserState();
       })
     );
 
+    // Only subscribe to cart if user is NOT admin
     this.subscriptions.add(
       this.cartService.cartItems$.subscribe(() => {
-        if (this.isLoggedIn) {
+        if (this.isLoggedIn && !this.isAdmin) {
           this.updateCartCount();
         }
       })
     );
+  }
+
+  updateUserState() {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    
+    if (this.isLoggedIn) {
+      const user = this.authService.getUser();
+      this.userName = user?.fullName?.split(' ')[0] || 'User';
+      this.isAdmin = this.authService.isAdmin();
+      this.userRole = user?.role || 'Customer';
+      
+      // Only update cart for non-admin users
+      if (!this.isAdmin) {
+        this.updateCartCount();
+      } else {
+        this.cartCount = 0;
+      }
+      
+      console.log('Navbar state:', {
+        isLoggedIn: this.isLoggedIn,
+        userName: this.userName,
+        isAdmin: this.isAdmin,
+        userRole: this.userRole,
+        cartCount: this.cartCount
+      });
+    } else {
+      this.userName = '';
+      this.isAdmin = false;
+      this.userRole = '';
+      this.cartCount = 0;
+    }
   }
 
   updateCartCount() {
     this.cartCount = this.cartService.getCartCount();
   }
 
+  navigateTo(route: string) {
+    this.router.navigate([route]);
+  }
+
   logout() {
     this.authService.logout();
-    this.router.navigate(['/home']);
+    this.updateUserState();
   }
 
   ngOnDestroy() {

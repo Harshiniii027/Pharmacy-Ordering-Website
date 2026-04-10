@@ -4,7 +4,6 @@ import { AuthService } from '../../../services/auth.service';
 import { UserDashboardService, UserDashboardStats, RecentOrder } from '../../../services/user-dashboard.service';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-user-dashboard',
   templateUrl: './user-dashboard.component.html',
@@ -55,27 +54,26 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   loadDashboardData() {
     if (!this.user) return;
 
-    this.subscriptions.add(
-      this.dashboardService.getUserStats(this.user.id).subscribe({
-        next: (data) => {
-          this.stats = data;
-        },
-        error: (error) => console.error('Error loading stats:', error)
-      })
-    );
-
-    this.subscriptions.add(
-      this.dashboardService.getRecentOrders(this.user.id, 5).subscribe({
-        next: (data) => {
-          this.recentOrders = data;
-          this.loading = false;
-        },
-        error: (error) => {
-          console.error('Error loading orders:', error);
-          this.loading = false;
-        }
-      })
-    );
+    // For now, using mock data until backend is ready
+    this.stats = {
+      totalOrders: 6,
+      totalSpent: 1950,
+      pendingOrders: 2,
+      deliveredOrders: 4,
+      cancelledOrders: 0,
+      prescriptionsCount: 3,
+      approvedPrescriptions: 2,
+      pendingPrescriptions: 1,
+      wishlistCount: 5
+    };
+    
+    this.recentOrders = [
+      { id: 1001, orderDate: '2025-04-15', totalAmount: 350, status: 'Delivered', itemsCount: 2 },
+      { id: 1002, orderDate: '2025-04-10', totalAmount: 180, status: 'Processing', itemsCount: 1 },
+      { id: 1003, orderDate: '2025-04-05', totalAmount: 425, status: 'Delivered', itemsCount: 4 }
+    ];
+    
+    this.loading = false;
   }
 
   getStatusBadgeClass(status: string): string {
@@ -93,7 +91,6 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
       case 'pending': return 'fa-clock';
       case 'processing': return 'fa-spinner';
       case 'delivered': return 'fa-check-circle';
-      case 'cancelled': return 'fa-times-circle';
       default: return 'fa-question-circle';
     }
   }

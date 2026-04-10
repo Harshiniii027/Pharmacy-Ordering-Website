@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { MedicineService } from '../../services/medicine.service';
 import { Category, Medicine } from '../../models/models';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,7 +21,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private medicineService: MedicineService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -66,6 +68,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([route]);
   }
 
   ngOnDestroy() {

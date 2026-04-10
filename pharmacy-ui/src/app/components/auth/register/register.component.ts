@@ -26,7 +26,7 @@ export class RegisterComponent {
     this.successMessage = '';
     
     this.authService.register(this.registerData).subscribe({
-      next: (response) => {
+      next: () => {
         this.loading = false;
         this.successMessage = 'Registration successful! Redirecting to login...';
         setTimeout(() => {
@@ -35,8 +35,7 @@ export class RegisterComponent {
       },
       error: (error) => {
         this.loading = false;
-        this.errorMessage = error.error?.message || 'Registration failed';
-        console.error(error);
+        this.errorMessage = error.message || 'Registration failed';
       }
     });
   }

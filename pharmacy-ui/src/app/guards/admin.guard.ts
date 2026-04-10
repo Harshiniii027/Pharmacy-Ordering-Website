@@ -17,7 +17,6 @@ export class AdminGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     
-    // First check if user is logged in
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login'], {
         queryParams: { returnUrl: state.url }
@@ -25,13 +24,11 @@ export class AdminGuard implements CanActivate {
       return false;
     }
 
-    // Then check if user has admin role
     if (this.authService.isAdmin()) {
       return true;
     }
 
-    // If not admin, redirect to home page
-    this.router.navigate(['/home']);
+    this.router.navigate(['/dashboard']);
     return false;
   }
 }

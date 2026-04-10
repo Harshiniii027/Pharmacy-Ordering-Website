@@ -1,7 +1,4 @@
 /* Same as login.component.css */
-/* Just copy the exact same CSS from login.component.css */
-/* The structure is identical, only the form fields differ */
-
 .auth-container {
   min-height: calc(100vh - 76px);
   display: flex;
@@ -59,12 +56,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
 .auth-icon i {
@@ -179,6 +172,7 @@
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
+  cursor: pointer;
 }
 
 .auth-footer a:hover {

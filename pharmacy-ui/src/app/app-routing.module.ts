@@ -13,12 +13,12 @@ import { CheckoutComponent } from './components/orders/checkout/checkout.compone
 import { OrderHistoryComponent } from './components/orders/order-history/order-history.component';
 import { UploadPrescriptionComponent } from './components/prescriptions/upload-prescription/upload-prescription.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { UserDashboardComponent } from './components/user/user-dashboard/user-dashboard.component';
 import { AdminDashboardComponent } from './components/admin/admin-dashboard/admin-dashboard.component';
 import { AdminMedicinesComponent } from './components/admin/admin-medicines/admin-medicines.component';
 import { AdminOrdersComponent } from './components/admin/admin-orders/admin-orders.component';
 import { AdminUsersComponent } from './components/admin/admin-users/admin-users.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { UserDashboardComponent } from './components/user/user-dashboard/user-dashboard.component';
 
 const routes: Routes = [
   // Public Routes
@@ -39,7 +39,7 @@ const routes: Routes = [
   { path: 'my-prescriptions', component: UploadPrescriptionComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
   
-  // Admin Routes
+  // Admin Routes (Admin Role Required)
   { path: 'admin', redirectTo: '/admin/dashboard', pathMatch: 'full' },
   { path: 'admin/dashboard', component: AdminDashboardComponent, canActivate: [AdminGuard] },
   { path: 'admin/medicines', component: AdminMedicinesComponent, canActivate: [AdminGuard] },

@@ -165,6 +165,11 @@
   right: 0;
 }
 
+.card-3 {
+  top: 50%;
+  right: -20px;
+}
+
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); }
@@ -316,20 +321,9 @@
   padding: 25px 15px;
   text-align: center;
   border-radius: 12px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.category-card[style*="pointer"], 
-.category-card[cursor="pointer"] {
   cursor: pointer;
-}
-
-.category-card:not([style*="pointer"]):not([cursor="pointer"]) {
-  cursor: default;
-  opacity: 0.8;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
 }
 
 .category-card:hover {
@@ -379,7 +373,6 @@
   transform: scaleX(1);
 }
 
-/* Login Prompt for Categories */
 .login-prompt {
   text-align: center;
   padding: 25px;
@@ -476,7 +469,6 @@
   margin-bottom: 12px;
 }
 
-/* Medicine Actions for Logged In Users */
 .medicine-actions {
   margin-top: 12px;
 }
@@ -490,8 +482,6 @@
   border-radius: 10px;
   color: white;
   font-weight: 500;
-  text-decoration: none;
-  text-align: center;
   font-size: 0.85rem;
   transition: all 0.3s ease;
 }
@@ -499,10 +489,8 @@
 .btn-view-details:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0,102,255,0.3);
-  color: white;
 }
 
-/* Login to Buy Text for Non-Logged Users */
 .login-to-buy {
   text-align: center;
   padding: 10px;
@@ -516,87 +504,6 @@
 .login-to-buy i {
   color: #0066ff;
   margin-right: 5px;
-}
-
-/* ==================== CALL TO ACTION SECTION ==================== */
-.cta-section {
-  padding: 60px 0;
-  background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3e 100%);
-}
-
-.cta-wrapper {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.cta-icon {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #0066ff, #00cc88);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 20px;
-}
-
-.cta-icon i {
-  font-size: 2rem;
-  color: white;
-}
-
-.cta-content h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 15px;
-}
-
-.cta-content p {
-  color: rgba(255,255,255,0.8);
-  margin-bottom: 25px;
-  font-size: 1.1rem;
-}
-
-.cta-buttons {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.btn-register-now {
-  padding: 12px 30px;
-  background: linear-gradient(135deg, #0066ff, #00cc88);
-  border: none;
-  border-radius: 50px;
-  color: white;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.btn-register-now:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,102,255,0.3);
-}
-
-.btn-login-now {
-  padding: 12px 30px;
-  background: transparent;
-  border: 2px solid #0066ff;
-  border-radius: 50px;
-  color: #0066ff;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.btn-login-now:hover {
-  background: rgba(0,102,255,0.1);
-  transform: translateY(-2px);
 }
 
 /* ==================== HOW IT WORKS ==================== */
@@ -656,14 +563,81 @@
   margin: 0;
 }
 
-/* ==================== BUTTONS ==================== */
-.btn-outline-primary {
-  padding: 10px 25px;
+/* ==================== CTA SECTION ==================== */
+.cta-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3e 100%);
+}
+
+.cta-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #0066ff, #00cc88);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.cta-icon i {
+  font-size: 2rem;
+  color: white;
+}
+
+.cta-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.cta-content p {
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-register-now {
+  padding: 12px 30px;
+  background: linear-gradient(135deg, #0066ff, #00cc88);
+  border: none;
   border-radius: 50px;
+  color: white;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.btn-outline-primary:hover {
+.btn-register-now:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,102,255,0.3);
+}
+
+.btn-login-now {
+  padding: 12px 30px;
+  background: transparent;
+  border: 2px solid #0066ff;
+  border-radius: 50px;
+  color: #0066ff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-login-now:hover {
+  background: rgba(0,102,255,0.1);
   transform: translateY(-2px);
 }
 

@@ -17,12 +17,10 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     
-    // Check if user is logged in
     if (this.authService.isLoggedIn()) {
       return true;
     }
 
-    // If not logged in, redirect to login page with return URL
     this.router.navigate(['/login'], {
       queryParams: { returnUrl: state.url }
     });

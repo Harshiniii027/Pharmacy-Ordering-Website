@@ -1,4 +1,4 @@
-<!-- ==================== HERO SECTION (Keep existing styling) ==================== -->
+<!-- ==================== HERO SECTION ==================== -->
 <section class="hero-section">
   <div class="hero-overlay"></div>
   <div class="hero-pattern"></div>
@@ -6,30 +6,32 @@
     <div class="row align-items-center min-vh-100">
       <div class="col-lg-6 hero-content">
         <div class="hero-badge">
-          <i class="fas fa-shield-alt"></i> Trusted Pharmacy
+          <i class="fas fa-shield-alt"></i> India's Trusted Pharmacy
         </div>
         <h1 class="hero-title">
           Your Health,<br>
           <span class="hero-highlight">Our Priority</span>
         </h1>
         <p class="hero-description">
-          Get authentic medicines delivered to your doorstep. Safe, secure, and trusted.
+          Get authentic medicines delivered to your doorstep. Safe, secure, and trusted by millions of Indians.
         </p>
         <div class="hero-buttons">
-          <!-- Show different buttons based on login status -->
-          <ng-container *ngIf="isLoggedIn">
-            <a routerLink="/medicines" class="btn btn-primary btn-lg">
+          <ng-container *ngIf="isLoggedIn; else guestButtons">
+            <button class="btn btn-primary btn-lg" (click)="navigateTo('/dashboard')">
+              <i class="fas fa-tachometer-alt me-2"></i>Go to Dashboard
+            </button>
+            <button class="btn btn-outline-light btn-lg" (click)="navigateTo('/medicines')">
               <i class="fas fa-pills me-2"></i>Browse Medicines
-            </a>
+            </button>
           </ng-container>
-          <ng-container *ngIf="!isLoggedIn">
-            <a routerLink="/register" class="btn btn-primary btn-lg">
+          <ng-template #guestButtons>
+            <button class="btn btn-primary btn-lg" (click)="navigateTo('/register')">
               <i class="fas fa-user-plus me-2"></i>Get Started
-            </a>
-            <a routerLink="/login" class="btn btn-outline-light btn-lg">
+            </button>
+            <button class="btn btn-outline-light btn-lg" (click)="navigateTo('/login')">
               <i class="fas fa-sign-in-alt me-2"></i>Login
-            </a>
-          </ng-container>
+            </button>
+          </ng-template>
         </div>
       </div>
       <div class="col-lg-6 hero-image">
@@ -44,6 +46,10 @@
           <div class="floating-card card-2">
             <i class="fas fa-prescription-bottle"></i>
             <span>Rx Verified</span>
+          </div>
+          <div class="floating-card card-3">
+            <i class="fas fa-rupee-sign"></i>
+            <span>Best Prices</span>
           </div>
         </div>
       </div>
@@ -76,6 +82,10 @@
         <i class="fas fa-lock"></i>
         <span>Secure Payments</span>
       </div>
+      <div class="trust-item">
+        <i class="fas fa-prescription-bottle"></i>
+        <span>Upload Prescription</span>
+      </div>
     </div>
   </div>
 </section>
@@ -86,6 +96,7 @@
     <div class="section-header">
       <span class="section-subtitle">Why Choose Us</span>
       <h2 class="section-title">We Make Healthcare <span class="text-gradient">Easy & Affordable</span></h2>
+      <p class="section-description">Experience the best online pharmacy service with unmatched quality and care</p>
     </div>
     
     <div class="features-grid">
@@ -94,34 +105,34 @@
           <i class="fas fa-stethoscope"></i>
         </div>
         <h4>Expert Consultation</h4>
-        <p>Connect with certified pharmacists</p>
+        <p>Connect with certified pharmacists for free consultation</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <i class="fas fa-prescription-bottle"></i>
         </div>
         <h4>Prescription Upload</h4>
-        <p>Upload and get verified instantly</p>
+        <p>Upload prescription and get medicines verified instantly</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <i class="fas fa-shipping-fast"></i>
         </div>
         <h4>Express Delivery</h4>
-        <p>Same day delivery available</p>
+        <p>Same day delivery available in major cities</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <i class="fas fa-rupee-sign"></i>
         </div>
         <h4>Best Prices</h4>
-        <p>Guaranteed lowest prices</p>
+        <p>Guaranteed lowest prices on all medicines</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== CATEGORIES SECTION (Preview Only) ==================== -->
+<!-- ==================== CATEGORIES SECTION ==================== -->
 <section class="categories-section">
   <div class="container">
     <div class="section-header">
@@ -131,9 +142,7 @@
     
     <div class="categories-grid" *ngIf="!loading">
       <div class="category-card" *ngFor="let cat of categories" 
-           [routerLink]="isLoggedIn ? '/medicines' : null" 
-           [queryParams]="isLoggedIn ? {category: cat.id} : null"
-           [style.cursor]="isLoggedIn ? 'pointer' : 'default'">
+           (click)="isLoggedIn ? navigateTo('/medicines?category=' + cat.id) : navigateTo('/login')">
         <div class="category-icon-wrapper">
           <i class="fas fa-capsules"></i>
         </div>
@@ -143,19 +152,20 @@
       </div>
     </div>
     
-    <!-- Login Prompt for Categories -->
     <div class="login-prompt" *ngIf="!isLoggedIn">
       <p><i class="fas fa-lock"></i> Login to explore categories and buy medicines</p>
-      <a routerLink="/login" class="btn btn-sm btn-outline-primary">Login Now</a>
+      <button class="btn btn-sm btn-outline-primary" (click)="navigateTo('/login')">Login Now</button>
     </div>
     
     <div class="text-center mt-4" *ngIf="isLoggedIn">
-      <a routerLink="/medicines" class="btn btn-outline-primary">View All Categories →</a>
+      <button class="btn btn-outline-primary" (click)="navigateTo('/medicines')">
+        View All Categories <i class="fas fa-arrow-right ms-2"></i>
+      </button>
     </div>
   </div>
 </section>
 
-<!-- ==================== FEATURED MEDICINES (Preview Only) ==================== -->
+<!-- ==================== FEATURED MEDICINES ==================== -->
 <section class="featured-section">
   <div class="container">
     <div class="section-header">
@@ -182,9 +192,10 @@
           <h3>{{medicine.name}}</h3>
           <p class="medicine-description">{{medicine.description | slice:0:60}}...</p>
           <div class="medicine-price">₹{{medicine.price}}</div>
-          <!-- View Only - No Add to Cart -->
           <div class="medicine-actions" *ngIf="isLoggedIn">
-            <a [routerLink]="['/medicine', medicine.id]" class="btn-view-details">View Details</a>
+            <button class="btn-view-details" (click)="navigateTo('/medicine/' + medicine.id)">
+              View Details
+            </button>
           </div>
           <div class="login-to-buy" *ngIf="!isLoggedIn">
             <i class="fas fa-lock"></i> Login to view details
@@ -194,11 +205,15 @@
     </div>
     
     <div class="text-center mt-4" *ngIf="isLoggedIn">
-      <a routerLink="/medicines" class="btn btn-primary">View All Medicines →</a>
+      <button class="btn btn-primary" (click)="navigateTo('/medicines')">
+        View All Medicines <i class="fas fa-arrow-right ms-2"></i>
+      </button>
     </div>
     
     <div class="text-center mt-4" *ngIf="!isLoggedIn">
-      <a routerLink="/register" class="btn btn-primary">Register to Buy Medicines →</a>
+      <button class="btn btn-primary" (click)="navigateTo('/register')">
+        Register to Buy Medicines <i class="fas fa-user-plus ms-2"></i>
+      </button>
     </div>
   </div>
 </section>
@@ -248,7 +263,7 @@
   </div>
 </section>
 
-<!-- ==================== CTA SECTION (Only for non-logged in users) ==================== -->
+<!-- ==================== CTA SECTION ==================== -->
 <section class="cta-section" *ngIf="!isLoggedIn">
   <div class="container">
     <div class="cta-wrapper">
@@ -259,12 +274,12 @@
         <h2>Ready to Order Medicines?</h2>
         <p>Create an account to start ordering medicines online. It's quick and free!</p>
         <div class="cta-buttons">
-          <a routerLink="/register" class="btn-register-now">
+          <button class="btn-register-now" (click)="navigateTo('/register')">
             <i class="fas fa-user-plus me-2"></i>Register Now
-          </a>
-          <a routerLink="/login" class="btn-login-now">
+          </button>
+          <button class="btn-login-now" (click)="navigateTo('/login')">
             <i class="fas fa-sign-in-alt me-2"></i>Login
-          </a>
+          </button>
         </div>
       </div>
     </div>

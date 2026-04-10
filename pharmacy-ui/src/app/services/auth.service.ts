@@ -42,8 +42,12 @@ export class AuthService {
   public currentUser: Observable<User | null>;
 
   constructor(private http: HttpClient, private router: Router) {
-    this.currentUserSubject = new BehaviorSubject<User | null>(this.getUser());
+    const storedUser = this.getUser();
+    this.currentUserSubject = new BehaviorSubject<User | null>(storedUser);
     this.currentUser = this.currentUserSubject.asObservable();
+    
+    // Log for debugging
+    console.log('AuthService initialized. User:', storedUser);
   }
 
   public get currentUserValue(): User | null {
@@ -56,35 +60,40 @@ export class AuthService {
     );
   }
 
-  // Update the login method to return user data
-login(data: LoginRequest): Observable<AuthResponse> {
-  return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(
-    tap((response: AuthResponse) => {
-      if (response && response.token) {
-        this.setSession(response);
-        this.currentUserSubject.next(this.getUser());
-      }
-    }),
-    catchError(this.handleError)
-  );
-}
+  login(data: LoginRequest): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, data).pipe(
+      tap((response: AuthResponse) => {
+        console.log('Login response:', response);
+        if (response && response.token) {
+          this.setSession(response);
+          const user = this.getUser();
+          console.log('User after login:', user);
+          this.currentUserSubject.next(user);
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }
 
   private setSession(authResult: AuthResponse): void {
     localStorage.setItem('token', authResult.token);
-    localStorage.setItem('user', JSON.stringify({
+    const user = {
       id: authResult.id,
       fullName: authResult.fullName,
       email: authResult.email,
       phone: authResult.phone,
       role: authResult.role
-    }));
+    };
+    localStorage.setItem('user', JSON.stringify(user));
+    console.log('Session set. User role:', user.role);
   }
 
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
+    console.log('User logged out');
+    this.router.navigate(['/home']);
   }
 
   getToken(): string | null {
@@ -93,26 +102,31 @@ login(data: LoginRequest): Observable<AuthResponse> {
 
   getUser(): User | null {
     const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    if (user) {
+      try {
+        const parsedUser = JSON.parse(user);
+        console.log('getUser() returning:', parsedUser);
+        return parsedUser;
+      } catch (e) {
+        console.error('Error parsing user:', e);
+        return null;
+      }
+    }
+    return null;
   }
 
   isLoggedIn(): boolean {
     const token = this.getToken();
-    if (!token) return false;
-    
-    try {
-      // Check if token is expired
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const expirationDate = new Date(payload.exp * 1000);
-      return expirationDate > new Date();
-    } catch {
-      return false;
-    }
+    const isLoggedIn = !!token;
+    console.log('isLoggedIn():', isLoggedIn);
+    return isLoggedIn;
   }
 
   isAdmin(): boolean {
     const user = this.getUser();
-    return user?.role?.toLowerCase() === 'admin';
+    const isAdmin = user?.role?.toLowerCase() === 'admin';
+    console.log('isAdmin():', isAdmin, 'User role:', user?.role);
+    return isAdmin;
   }
 
   private handleError(error: any): Observable<never> {
@@ -123,8 +137,6 @@ login(data: LoginRequest): Observable<AuthResponse> {
       errorMessage = 'Invalid request';
     } else if (error.status === 401) {
       errorMessage = 'Invalid email or password';
-    } else if (error.status === 500) {
-      errorMessage = 'Server error. Please try again later.';
     }
     return throwError(() => new Error(errorMessage));
   }
